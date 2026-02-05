@@ -64,7 +64,7 @@ const POSProductsPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEditProduct = (product) => {
+  const handleEditProduct = (product: any) => {
     setEditingProduct(product);
     setFormData({
       name: product.name,
