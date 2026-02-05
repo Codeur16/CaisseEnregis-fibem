@@ -28,7 +28,7 @@ const POSCustomersPage = () => {
   const [filteredCustomers, setFilteredCustomers] = useState(customers);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [editingCustomer, setEditingCustomer] = useState<any>(null);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -64,7 +64,7 @@ const POSCustomersPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEditCustomer = (customer) => {
+  const handleEditCustomer = (customer: any) => {
     setEditingCustomer(customer);
     setFormData({
       firstName: customer.firstName,
@@ -76,11 +76,11 @@ const POSCustomersPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteCustomer = (id) => {
+  const handleDeleteCustomer = (id: number) => {
     deleteCustomer(id);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (editingCustomer) {
@@ -97,14 +97,14 @@ const POSCustomersPage = () => {
     setIsDialogOpen(false);
   };
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const getLoyaltyLevel = (points) => {
+  const getLoyaltyLevel = (points: number) => {
     if (points >= 3000) return { level: 'Platine', color: 'text-blue-500', icon: Star };
     if (points >= 2000) return { level: 'Gold', color: 'text-yellow-500', icon: Star };
     if (points >= 1000) return { level: 'Silver', color: 'text-gray-400', icon: Star };
