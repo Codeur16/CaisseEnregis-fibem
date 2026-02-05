@@ -35,7 +35,7 @@ const calculateSalesData = (transactions) => {
   // Convert to array and sort by date
   return Object.entries(groupedData)
     .map(([date, data]) => ({ date, revenue: data.revenue, orders: data.orders }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     // Limit to last 7 days for demo
     .slice(-7);
 };
