@@ -19,9 +19,9 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { usePOSStore } from '@/stores/posStore';
 
 // Calculate sales data from the store transactions
-const calculateSalesData = (transactions) => {
+const calculateSalesData = (transactions: any[]) => {
   // Group transactions by date and calculate revenue and orders
-  const groupedData = {};
+  const groupedData: Record<string, { revenue: number, orders: number }> = {};
 
   transactions.forEach(transaction => {
     const date = transaction.date;

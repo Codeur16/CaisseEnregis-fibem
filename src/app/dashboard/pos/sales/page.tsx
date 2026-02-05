@@ -25,8 +25,8 @@ import { usePOSStore } from '@/stores/posStore';
 const POSSalesPage = () => {
   const { isOnline } = useNetworkStatus();
   const { products, addTransaction } = usePOSStore();
-  const [cart, setCart] = useState([]);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [cart, setCart] = useState<any[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
   const [discount, setDiscount] = useState(0); // percentage discount
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -44,13 +44,13 @@ const POSSalesPage = () => {
     }
   }, [searchTerm, products]);
 
-  const addToCart = (product) => {
+  const addToCart = (product: any) => {
     const existingItem = cart.find(item => item.id === product.id);
-    
+
     if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 } 
+      setCart(cart.map(item =>
+        item.id === product.id
+          ? { ...item, quantity: item.quantity + 1 }
           : item
       ));
     } else {
@@ -58,7 +58,7 @@ const POSSalesPage = () => {
     }
   };
 
-  const updateQuantity = (id, change) => {
+  const updateQuantity = (id: number, change: number) => {
     setCart(cart.map(item => {
       if (item.id === id) {
         const newQuantity = item.quantity + change;
@@ -68,7 +68,7 @@ const POSSalesPage = () => {
     }).filter(item => item.quantity > 0)); // Remove items with 0 quantity
   };
 
-  const removeFromCart = (id) => {
+  const removeFromCart = (id: number) => {
     setCart(cart.filter(item => item.id !== id));
   };
 
@@ -91,6 +91,8 @@ const POSSalesPage = () => {
         discount: discountAmount,
         total: total,
         paymentMethod: 'Carte', // This would be dynamic in a real app
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().substring(0, 5),
         cashier: 'Current User', // This would be the logged-in user
       });
 
