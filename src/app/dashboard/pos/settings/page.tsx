@@ -66,7 +66,7 @@ const POSUserManagementPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEditUser = (user) => {
+  const handleEditUser = (user: any) => {
     setEditingUser(user);
     setFormData({
       firstName: user.firstName,
@@ -78,11 +78,11 @@ const POSUserManagementPage = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteUser = (id) => {
+  const handleDeleteUser = (id: number) => {
     deleteUser(id);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (editingUser) {
