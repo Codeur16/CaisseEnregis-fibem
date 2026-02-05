@@ -15,6 +15,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { usePOSStore } from '@/stores/posStore';
+import jsPDF from 'jspdf';
 
 const POSReceiptsPage = () => {
   const { transactions } = usePOSStore();
@@ -29,7 +30,76 @@ const POSReceiptsPage = () => {
   );
 
   const handlePrint = () => {
-    window.print();
+    if (!selectedReceipt) return;
+
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(18);
+    doc.text('CAFÉ BONHEUR', 105, 20, { align: 'center' });
+
+    // Add address
+    doc.setFontSize(10);
+    doc.text('123 Rue de la Paix, 75001 Paris', 105, 30, { align: 'center' });
+    doc.text('+33 1 23 45 67 89', 105, 35, { align: 'center' });
+
+    // Add receipt header
+    doc.setFontSize(14);
+    doc.text('REÇU DE CAISSE', 105, 45, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.text(`Numéro: ${selectedReceipt.id}`, 20, 55);
+    doc.text(`Date: ${selectedReceipt.date} à ${selectedReceipt.time}`, 20, 60);
+    doc.text(`Caisse: ${selectedReceipt.cashier}`, 20, 65);
+
+    // Add items header
+    let yPos = 75;
+    doc.setFontSize(12);
+    doc.text('Article', 20, yPos);
+    doc.text('Qté', 100, yPos);
+    doc.text('Prix', 130, yPos);
+    doc.text('Total', 160, yPos);
+
+    yPos += 10;
+    doc.line(15, yPos - 2, 190, yPos - 2); // horizontal line
+
+    // Add items
+    doc.setFontSize(10);
+    selectedReceipt.items.forEach((item, index) => {
+      doc.text(item.name.substring(0, 20), 20, yPos); // limit name length
+      doc.text(item.qty.toString(), 100, yPos);
+      doc.text(`${item.price.toFixed(2)}€`, 130, yPos);
+      doc.text(`${item.total.toFixed(2)}€`, 160, yPos);
+      yPos += 8;
+    });
+
+    yPos += 10;
+    doc.line(15, yPos - 2, 190, yPos - 2); // horizontal line
+
+    // Add totals
+    doc.text(`Sous-total: ${selectedReceipt.subtotal.toFixed(2)}€`, 120, yPos);
+    yPos += 8;
+    doc.text(`Taxe (8%): ${selectedReceipt.tax.toFixed(2)}€`, 120, yPos);
+    yPos += 8;
+    if (selectedReceipt.discount > 0) {
+      doc.text(`Remise: -${selectedReceipt.discount.toFixed(2)}€`, 120, yPos);
+      yPos += 8;
+    }
+    doc.setFontSize(12);
+    doc.text(`TOTAL: ${selectedReceipt.total.toFixed(2)}€`, 120, yPos);
+    yPos += 10;
+
+    doc.text(`Moyen de paiement: ${selectedReceipt.paymentMethod}`, 20, yPos);
+
+    // Add footer
+    yPos += 20;
+    doc.setFontSize(8);
+    doc.text('Merci de votre visite!', 105, yPos, { align: 'center' });
+    doc.text('Nous espérons vous revoir bientôt', 105, yPos + 5, { align: 'center' });
+    doc.text(`Reçu imprimé le ${new Date().toLocaleDateString()}`, 105, yPos + 10, { align: 'center' });
+
+    // Save the PDF
+    doc.save(`receipt_${selectedReceipt.id}.pdf`);
   };
 
   const handleDownload = () => {
